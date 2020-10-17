@@ -16,6 +16,7 @@
 ################################################################################
 
 pushd $SRC/h2o
+mv driver.cc fuzz/driver.cc
 cmake -DCMAKE_C_FLAGS="${CFLAGS}" -DCMAKE_CXX_FLAGS="${CXXFLAGS}" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_BUILD_TYPE=Debug .
 make h2o-fuzzer-http2
 cp ./h2o-fuzzer-* $OUT/
