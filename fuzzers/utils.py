@@ -69,7 +69,8 @@ NO_SANITIZER_COMPAT_CFLAGS = [
     '-pthread', '-Wl,--no-as-needed', '-Wl,-ldl', '-Wl,-lm',
     '-Wno-unused-command-line-argument'
 ]
-NO_SANITIZER_COMPAT_CXXFLAGS = ['-stdlib=libc++'] + NO_SANITIZER_COMPAT_CFLAGS
+# it doesn't work for libc++
+NO_SANITIZER_COMPAT_CXXFLAGS = NO_SANITIZER_COMPAT_CFLAGS
 
 
 def set_no_sanitizer_compilation_flags(env=None):
@@ -162,7 +163,6 @@ def set_default_optimization_flag(env=None):
 def initialize_flags(env=None):
     """Set initial flags before fuzzer.build() is called."""
     set_no_sanitizer_compilation_flags(env)
-    set_default_optimization_flag(env)
 
     for flag_var in ['CFLAGS', 'CXXFLAGS']:
         print('{flag_var} = {flag_value}'.format(
