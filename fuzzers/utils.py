@@ -25,7 +25,7 @@ import yaml
 
 # Keep all fuzzers at same optimization level until fuzzer explicitly needs or
 # specifies it.
-DEFAULT_OPTIMIZATION_LEVEL = '-O3'
+DEFAULT_OPTIMIZATION_LEVEL = '-O0'
 
 LIBCPLUSPLUS_FLAG = '-stdlib=libc++'
 
