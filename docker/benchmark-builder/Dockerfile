@@ -27,10 +27,9 @@ ENV BENCHMARK $benchmark
 
 # Copy latest python3 from base-image into local.
 COPY --from=base-image /usr/local/bin/python3* /usr/local/bin/
-COPY --from=base-image /usr/local/lib/python3.7 /usr/local/lib/python3.7
-COPY --from=base-image /usr/local/include/python3.7m /usr/local/include/python3.7m
-
-COPY fuzzers/$fuzzer/fuzzer.py $SRC/fuzzer.py
+COPY --from=base-image /usr/local/lib/python3.8 /usr/local/lib/python3.8
+COPY --from=base-image /usr/local/include/python3.8 /usr/local/include/python3.8
+COPY --from=base-image /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 
 # Copy the entire fuzzers directory tree to allow for module dependencies.
 COPY fuzzers $SRC/fuzzers
@@ -42,11 +41,11 @@ RUN touch $SRC/__init__.py
 # and is not needed during build process.
 ENV ASAN_OPTIONS="detect_leaks=0"
 
+COPY benchmarks/$benchmark/benchmark.yaml /
+
 RUN mkdir /opt/fuzzbench/
 COPY docker/benchmark-builder/checkout_commit.py /opt/fuzzbench/
-COPY benchmarks/$benchmark/benchmark.yaml /
 RUN export CHECKOUT_COMMIT=$(cat /benchmark.yaml | tr -d ' ' | grep 'commit:' | cut -d ':' -f2) && \
     python3 -u /opt/fuzzbench/checkout_commit.py $CHECKOUT_COMMIT $SRC
+RUN PYTHONPATH=$SRC python3 -u -c "from fuzzers import utils; utils.initialize_env(); from fuzzers.$FUZZER import fuzzer; fuzzer.build()"
 
-RUN export FUZZ_TARGET=$(cat /benchmark.yaml | tr -d ' ' | grep 'fuzz_target:' | cut -d ':' -f2) && \
-    PYTHONPATH=$SRC python3 -u -c "from fuzzers import utils; utils.initialize_flags(); import fuzzer; fuzzer.build()"

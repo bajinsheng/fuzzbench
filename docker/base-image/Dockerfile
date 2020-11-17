@@ -14,9 +14,9 @@
 
 FROM ubuntu:xenial
 
-# Build Python 3.7.6 from source because pandas doesn't support xenial's
+# Build Python 3.8.6 from source because pandas doesn't support xenial's
 # Python3 version (3.5.2).
-ENV PYTHON_VERSION 3.7.6
+ENV PYTHON_VERSION 3.8.6
 RUN apt-get update -y && apt-get install -y \
     build-essential \
     rsync \
@@ -40,6 +40,10 @@ RUN cd /tmp/ && \
     ./configure --enable-loadable-sqlite-extensions --enable-optimizations && \
     make -j install && \
     rm -r /tmp/Python-$PYTHON_VERSION.tar.xz /tmp/Python-$PYTHON_VERSION
+
+# Install common python dependencies.
+COPY ./requirements.txt /
+RUN pip3 install -r /requirements.txt
 
 # Install google-cloud-sdk.
 RUN apt-get update -y && apt-get install -y \

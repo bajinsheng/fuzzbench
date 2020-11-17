@@ -15,9 +15,11 @@
 ARG parent_image
 FROM $parent_image
 
-COPY greyc /greyc
-RUN cd /greyc && \
-    ./build.sh && \
+RUN apt-get install -y vim
+
+COPY fuzzinfer /fuzzinfer
+RUN cd /fuzzinfer && \
+    CXX=clang++ LLVM_CONFIG=llvm-config ./build.sh && \
     cp libFuzzer.a /usr/lib/libFuzzer.a && \
     cp sanitizer/FuzzerOCGSanitizer.so /opt/FuzzerOCGSanitizer.so
 

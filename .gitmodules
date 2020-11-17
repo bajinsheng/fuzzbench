@@ -4,3 +4,6 @@
 [submodule "fuzzers/libfuzzer_ocg/greyc"]
 	path = fuzzers/libfuzzer_ocg/greyc
 	url = https://github.com/mboehme/greyc
+[submodule "fuzzers/libfuzzer_ocg/fuzzinfer"]
+	path = fuzzers/libfuzzer_ocg/fuzzinfer
+	url = https://github.com/bajinsheng/OCG
