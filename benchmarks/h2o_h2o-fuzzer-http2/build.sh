@@ -17,17 +17,7 @@
 
 pushd $SRC/h2o
 if [ "$FUZZER" = "libfuzzer_ocg" ]; then
-#mv driver.cc fuzz/driver.cc
-#else
-#rm -rf driver.cc
-#fi
-#cmake -DCMAKE_C_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link" -DCMAKE_CXX_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -fsanitize=fuzzer-no-link" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_BUILD_TYPE=Debug .
-#cmake -DCMAKE_C_FLAGS="${CFLAGS}" -DCMAKE_CXX_FLAGS="${CXXFLAGS}" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_BUILD_TYPE=Debug .
-#make h2o-fuzzer-http2
-#cp ./h2o-fuzzer-* $OUT/
-#cp -r $SRC/h2o/fuzz/http2-corpus $OUT/seeds
-#cp $SRC/*.options $SRC/h2o/fuzz/*.dict $OUT/
-#
+cp $SRC/OCGWhitelist /tmp/OCGWhitelist
 cmake -DCMAKE_C_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument" -DCMAKE_CXX_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_BUILD_TYPE=Debug .
 fi
 cmake  -DCMAKE_C_FLAGS="${CFLAGS}" -DCMAKE_CXX_FLAGS="${CXXFLAGS}" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_USE_STATIC_LIBS=TRUE .
