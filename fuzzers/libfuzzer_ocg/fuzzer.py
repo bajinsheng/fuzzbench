@@ -76,6 +76,7 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
         flags.append('-dict=' + dictionary_path)
 
     os.environ['ASAN_OPTIONS'] = 'symbolize=1'
+    os.environ['ASAN_SYMBOLIZER_PATH'] = '/usr/bin/llvm-symbolizer-11'
     command = [target_binary] + flags + [output_corpus, input_corpus]
     print('[run_fuzzer] Running command: ' + ' '.join(command))
     subprocess.check_call(command)
