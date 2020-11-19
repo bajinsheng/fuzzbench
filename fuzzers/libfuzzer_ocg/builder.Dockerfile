@@ -18,6 +18,7 @@ FROM $parent_image
 RUN apt-get install -y vim
 
 COPY fuzzinfer /fuzzinfer
+COPY allowlist.txt /fuzzinfer/
 RUN cd /fuzzinfer && \
     CXX=clang++ LLVM_CONFIG=llvm-config ./build.sh && \
     cp libFuzzer.a /usr/lib/libFuzzer.a && \

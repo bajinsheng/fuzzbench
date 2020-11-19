@@ -1,5 +1,5 @@
 # Copyright 2020 Google LLC
-#
+# 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -32,6 +32,7 @@ def build():
     os.environ['CC'] = 'clang'
     os.environ['CXX'] = 'clang++'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
+    os.environ["ALLOWLIST"] = '/fuzzinfer/allowlist.txt'
 
     utils.build_benchmark()
 
