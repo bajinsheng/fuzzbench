@@ -32,7 +32,7 @@ def build():
     os.environ['CC'] = 'clang'
     os.environ['CXX'] = 'clang++'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
-    os.environ["ALLOWLIST"] = '/fuzzinfer/allowlist.txt'
+    os.environ["ALLOWLIST"] = '/out/allowlist.txt'
 
     utils.build_benchmark()
 

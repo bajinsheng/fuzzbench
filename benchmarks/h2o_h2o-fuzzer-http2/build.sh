@@ -17,7 +17,6 @@
 
 pushd $SRC/h2o
 if [ "$FUZZER" = "libfuzzer_ocg" ]; then
-cp $SRC/OCGWhitelist /tmp/OCGWhitelist
 cmake -DCMAKE_C_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument" -DCMAKE_CXX_FLAGS="-pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_BUILD_TYPE=Debug .
 fi
 cmake  -DCMAKE_C_FLAGS="${CFLAGS}" -DCMAKE_CXX_FLAGS="${CXXFLAGS}" -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_USE_STATIC_LIBS=TRUE .

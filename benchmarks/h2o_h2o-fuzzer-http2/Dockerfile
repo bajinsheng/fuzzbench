@@ -19,5 +19,5 @@ RUN apt-get update && apt-get install -y make autoconf automake libtool cmake zl
 RUN git clone https://github.com/h2o/h2o
 WORKDIR h2o
 COPY build.sh $SRC/
-COPY OCGWhitelist $SRC/
+COPY OCGWhitelist $OUT/allowlist.txt
 COPY *.options $SRC/
