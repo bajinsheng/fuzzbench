@@ -15,8 +15,6 @@
 ARG parent_image
 FROM $parent_image
 
-RUN apt-get install -y vim
-
 COPY fuzzinfer /fuzzinfer
 RUN cd /fuzzinfer && \
     CXX=clang++ LLVM_CONFIG=llvm-config ./build.sh && \
