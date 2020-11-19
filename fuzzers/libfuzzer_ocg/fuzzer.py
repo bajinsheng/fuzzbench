@@ -32,7 +32,8 @@ def build():
     os.environ['CC'] = 'clang'
     os.environ['CXX'] = 'clang++'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
-    os.environ["ALLOWLIST"] = '/out/allowlist.txt'
+    os.environ['ALLOWLIST'] = '/out/allowlist.txt'
+    os.environ['ASAN_OPTIONS'] = 'symbolize=1'
 
     utils.build_benchmark()
 
