@@ -1,5 +1,5 @@
 # Copyright 2020 Google LLC
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -24,7 +24,7 @@ def build():
     # With LibFuzzer we use -fsanitize=fuzzer-no-link for build CFLAGS and then
     # /usr/lib/libFuzzer.a as the FUZZER_LIB for the main fuzzing binary. This
     # allows us to link against a version of LibFuzzer that we specify.
-    cflags = ['-lpthread','-ldl','-fsanitize=fuzzer-no-link', '-D_GLIBCXX_USE_CXX11_ABI=0', 
+    cflags = ['-lpthread','-ldl','-fsanitize=fuzzer-no-link', '-D_GLIBCXX_USE_CXX11_ABI=0',
               '-Xclang -load -Xclang /opt/FuzzerOCGSanitizer.so']
     utils.append_flags('CFLAGS', cflags)
     utils.append_flags('CXXFLAGS', cflags)
@@ -32,7 +32,6 @@ def build():
     os.environ['CC'] = 'clang'
     os.environ['CXX'] = 'clang++'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
-    os.environ['ALLOWLIST'] = '/out/allowlist.txt'
     os.environ['ASAN_OPTIONS'] = 'symbolize=1'
 
     utils.build_benchmark()

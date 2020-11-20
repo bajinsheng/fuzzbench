@@ -21,3 +21,4 @@ WORKDIR h2o
 COPY build.sh $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
 COPY *.options $SRC/
+ENV  ALLOWLIST /out/allowlist.txt
