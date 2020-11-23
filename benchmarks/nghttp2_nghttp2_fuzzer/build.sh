@@ -18,8 +18,7 @@
 autoreconf -i
 if [ "$FUZZER" = "libfuzzer_ocg" ]; then
 sed -i "s/-O2/-O0/g" configure
-./configure --enable-lib-only CFLAGS=""
-sed -i "s/^CFLAGS =/CFLAGS = -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -Xclang -load -Xclang \/opt\/FuzzerOCGSanitizer.so/g" lib/Makefile
+./configure --enable-lib-only
 sed -i "s/\$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/\$(CCLD) \$(AM_CFLAGS)/g" lib/Makefile
 else
 ./configure --enable-lib-only

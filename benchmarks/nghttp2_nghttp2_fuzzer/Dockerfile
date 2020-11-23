@@ -19,3 +19,5 @@ RUN apt-get update && apt-get install -y make autoconf automake libtool pkg-conf
 RUN git clone --depth 1 https://github.com/nghttp2/nghttp2.git
 WORKDIR nghttp2
 COPY build.sh *.options $SRC/
+COPY OCGWhitelist $OUT/allowlist.txt
+ENV  ALLOWLIST /out/allowlist.txt
