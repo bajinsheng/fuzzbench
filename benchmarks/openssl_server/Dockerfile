@@ -1,4 +1,3 @@
-#!/bin/bash -eu
 # Copyright 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +14,10 @@
 #
 ################################################################################
 
-autoreconf -i
-if [ "$FUZZER" = "libfuzzer_ocg" ]; then
-sed -i "s/-O2/-O0/g" configure
-./configure --enable-lib-only
-sed -i "s/\$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/\$(CCLD) \$(AM_CFLAGS)/g" lib/Makefile
-else
-./configure --enable-lib-only
-fi
-
-make all
-
-$CXX $CXXFLAGS -std=c++11 -Ilib/includes \
-    fuzz/fuzz_target.cc -o $OUT/nghttp2_fuzzer \
-    $LIB_FUZZING_ENGINE lib/.libs/libnghttp2.a
-
-cp $SRC/*.options $OUT
-
-zip -j $OUT/nghttp2_fuzzer_seed_corpus.zip fuzz/corpus/*/*
-
-
-
+FROM gcr.io/oss-fuzz-base/base-builder
+RUN apt-get update && apt-get install -y make
+RUN git clone --depth 1 https://github.com/openssl/openssl.git
+WORKDIR openssl
+COPY build.sh *.options $SRC/
+COPY OCGWhitelist $OUT/allowlist.txt
+ENV  ALLOWLIST /out/allowlist.txt
