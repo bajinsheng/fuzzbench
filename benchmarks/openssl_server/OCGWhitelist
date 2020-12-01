@@ -1,1 +1,13 @@
-ssl
+SSL_do_handshake
+SSL_set_accept_state
+SSL_set_connect_state
+SSL_do_handshake
+ssl_do_handshake_intern
+SSL_in_
+SSL_state
+SSL_set_state
+handshake
+SSL_read
+ssl_read_internal
+ssl_connect
+ssl_accept
