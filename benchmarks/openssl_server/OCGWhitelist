@@ -15,3 +15,13 @@ read_state_machine
 write_state_machine
 ossl_statem_app_data_allowed
 ossl_statem_check_finish_init
+state_machine
+ossl_statem_clear
+ossl_statem_set_renegotiate
+ossl_statem_skip_early_data
+ossl_statem_check_finish_init
+ossl_statem_set_hello_verify_done
+statem_do_write
+statem_flush
+ossl_statem_app_data_allowed
+ossl_statem_export
