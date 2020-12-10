@@ -8,12 +8,8 @@ h2o_http2_stream_close
 run_pending_requests
 h2o_process_request
 execute_or_enqueue_request
-execute_or_enqueue_request_core
-finish_body_streaming
 h2o_http2_conn_unregister_stream
-update_stream_output_window
 h2o_http2_scheduler_activate
-h2o_http2_stream_close
 handle_incoming_request
 h2o_hpack_parse_request
 handle_trailing_headers
@@ -21,10 +17,10 @@ handle_headers_frame
 handle_data_frame
 h2o_http2_conn_get_stream
 h2o_http2_stream_open
-handle_incoming_request
 handle_priority_frame
 set_priority
 h2o_http2_encode_frame_header
 commit_data_header
 send_data
 send_headers
+handle_settings_frame
