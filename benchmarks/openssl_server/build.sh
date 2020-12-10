@@ -29,7 +29,7 @@ sed -i "s/EX_LIBS= -lpthread -ldl -load/EX_LIBS= -lpthread -ldl/g" Makefile
 fi
 
 make -j$(nproc) LDCMD="$CXX $CXXFLAGS" || true
-
+make -j$(nproc) LDCMD="$CXX $CXXFLAGS" fuzz/server
 fuzzers=$(find fuzz -executable -type f '!' -name \*.py '!' -name \*-test '!' -name \*.pl)
 for f in $fuzzers; do
 	fuzzer=$(basename $f)
