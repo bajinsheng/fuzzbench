@@ -24,15 +24,15 @@ def build():
     # With LibFuzzer we use -fsanitize=fuzzer-no-link for build CFLAGS and then
     # /usr/lib/libFuzzer.a as the FUZZER_LIB for the main fuzzing binary. This
     # allows us to link against a version of LibFuzzer that we specify.
-    cflags = ['-lpthread','-ldl','-fsanitize=fuzzer-no-link', '-D_GLIBCXX_USE_CXX11_ABI=0',
+    cflags = [ '-fsanitize=address', '-fsanitize-address-use-after-scope', '-lpthread','-ldl','-fsanitize=fuzzer-no-link', '-D_GLIBCXX_USE_CXX11_ABI=0',
               '-Xclang -load -Xclang /opt/FuzzerOCGSanitizer.so']
     utils.append_flags('CFLAGS', cflags)
     utils.append_flags('CXXFLAGS', cflags)
+    utils.append_flags('ASAN_OPTIONS', ['abort_on_error=1', 'symbolize=1'])
 
     os.environ['CC'] = 'clang'
     os.environ['CXX'] = 'clang++'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
-    os.environ['ASAN_OPTIONS'] = 'symbolize=1'
 
     utils.build_benchmark()
 
@@ -74,8 +74,7 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
     if dictionary_path:
         flags.append('-dict=' + dictionary_path)
 
-    os.environ['ASAN_OPTIONS'] = 'symbolize=1'
-    os.environ['ASAN_SYMBOLIZER_PATH'] = '/usr/bin/llvm-symbolizer-11'
+    os.environ['ASAN_OPTIONS'] = 'abort_on_error=1,symbolize=1'
     command = [target_binary] + flags + [output_corpus, input_corpus]
     print('[run_fuzzer] Running command: ' + ' '.join(command))
     subprocess.check_call(command)
