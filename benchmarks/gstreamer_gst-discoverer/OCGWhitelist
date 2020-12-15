@@ -1,0 +1,12 @@
+gst_discoverer_init
+gst_element_set_state
+gst_element_get_state
+discoverer_reset
+gst_discoverer_discover_uri
+g_signal_connect
+gst_discoverer_new
+uridecodebin_pad_removed_cb
+discoverer_collect
+gst_element_query_duration
+gst_bus_set_flushing
+discoverer_cleanup
