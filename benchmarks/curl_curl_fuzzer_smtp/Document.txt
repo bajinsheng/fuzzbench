@@ -1,0 +1,20 @@
+lib/smtp.h
+/* SMTP state machine */
+typedef enum {
+  SMTP_STOP,        /* do nothing state, stops the state machine */
+  SMTP_SERVERGREET, /* waiting for the initial greeting immediately after
+                       a connect */
+  SMTP_EHLO,
+  SMTP_HELO,
+  SMTP_STARTTLS,
+  SMTP_UPGRADETLS,  /* asynchronously upgrade the connection to SSL/TLS
+                       (multi mode only) */
+  SMTP_AUTH,
+  SMTP_COMMAND,     /* VRFY, EXPN, NOOP, RSET and HELP */
+  SMTP_MAIL,        /* MAIL FROM */
+  SMTP_RCPT,        /* RCPT TO */
+  SMTP_DATA,
+  SMTP_POSTDATA,
+  SMTP_QUIT,
+  SMTP_LAST         /* never used */
+} smtpstate;
