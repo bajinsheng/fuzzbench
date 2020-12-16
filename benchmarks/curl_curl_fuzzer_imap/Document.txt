@@ -1,0 +1,22 @@
+lib/imap.h
+/* IMAP State machine */
+typedef enum {
+  IMAP_STOP,         /* do nothing state, stops the state machine */
+  IMAP_SERVERGREET,  /* waiting for the initial greeting immediately after
+                        a connect */
+  IMAP_CAPABILITY,
+  IMAP_STARTTLS,
+  IMAP_UPGRADETLS,   /* asynchronously upgrade the connection to SSL/TLS
+                       (multi mode only) */
+  IMAP_AUTHENTICATE,
+  IMAP_LOGIN,
+  IMAP_LIST,
+  IMAP_SELECT,
+  IMAP_FETCH,
+  IMAP_FETCH_FINAL,
+  IMAP_APPEND,
+  IMAP_APPEND_FINAL,
+  IMAP_SEARCH,
+  IMAP_LOGOUT,
+  IMAP_LAST          /* never used */
+} imapstate;

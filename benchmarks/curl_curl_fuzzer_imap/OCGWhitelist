@@ -1,0 +1,13 @@
+Curl_ssl_connect_nonblocking
+state
+Curl_pp_sendf
+Curl_sasl_continue
+Curl_pgrsSetUploadSize
+Curl_setup_transfer
+Curl_pp_flushsend
+Curl_pp_readresp
+Curl_ssl_connect_nonblocking
+Curl_pp_statemach
+Curl_pp_getsock
+Curl_sasl_parse_url_auth_option
+imap_
