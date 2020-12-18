@@ -1,3 +1,0 @@
-handle_headers_frame
-handle_data_frame
-handle_request_body_chunk
