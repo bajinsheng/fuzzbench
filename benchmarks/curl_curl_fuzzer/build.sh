@@ -59,31 +59,8 @@ export INSTALLDIR=/src/curl_install
 export CFLAGS=`echo $CFLAGS | sed 's/-Xclang -load -Xclang \/opt\/FuzzerOCGSanitizer.so//'`
 export CXXFLAGS=`echo $CXXFLAGS | sed 's/-Xclang -load -Xclang \/opt\/FuzzerOCGSanitizer.so//'`
 
-# Install zlib
-${SCRIPTDIR}/handle_x.sh zlib ${ZLIBDIR} ${INSTALLDIR} || exit 1
-
-# For the memory sanitizer build, turn off OpenSSL as it causes bugs we can't
-# affect (see 16697, 17624)
-if [[ ${SANITIZER} != "memory" ]]
-then
-    # Install openssl
-    export OPENSSLFLAGS="-fno-sanitize=alignment"
-    ${SCRIPTDIR}/handle_x.sh openssl ${OPENSSLDIR} ${INSTALLDIR} || exit 1
-fi
-
-# Install nghttp2
-${SCRIPTDIR}/handle_x.sh nghttp2 ${NGHTTPDIR} ${INSTALLDIR} || exit 1
-
-# Add the instrument flags
-export CFLAGS="$CFLAGS -Xclang -load -Xclang /opt/FuzzerOCGSanitizer.so"
-export CXXFLAGS="$CXXFLAGS -Xclang -load -Xclang /opt/FuzzerOCGSanitizer.so"
-
-# Compile curl
-${SCRIPTDIR}/install_curl.sh /src/curl ${INSTALLDIR} || true
-
-# Manually copy the necessary file of libcurl to the INSTALLDIR
-cp -r /src/curl/include/curl  ${INSTALLDIR}/include/
-cp /src/curl/lib/.libs/libcurl.* ${INSTALLDIR}/lib/
+# Install the libcurl
+git clone https://github.com/bajinsheng/curl_install $INSTALLDIR
 
 # Build the fuzzers.
 ${SCRIPTDIR}/compile_fuzzer.sh ${INSTALLDIR} || true
