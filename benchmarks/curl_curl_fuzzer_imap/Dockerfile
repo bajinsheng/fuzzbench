@@ -27,3 +27,4 @@ WORKDIR $SRC/curl_fuzzer
 COPY build.sh $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
 ENV  ALLOWLIST /out/allowlist.txt
+COPY libfuzzer_ocg_build.sh $SRC/
