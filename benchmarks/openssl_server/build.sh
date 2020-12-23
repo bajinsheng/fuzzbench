@@ -25,7 +25,7 @@ fi
 
 if [ "$FUZZER" = "libfuzzer_ocg" ]; then
 sed -i "s/-Xclang -Xclang/-Xclang -load -Xclang/g" Makefile
-sed -i "s/EX_LIBS= -lpthread -ldl -load/EX_LIBS= -lpthread -ldl/g" Makefile
+sed -i "s/EX_LIBS= -load/EX_LIBS= /g" Makefile
 fi
 
 make -j$(nproc) LDCMD="$CXX $CXXFLAGS" || true
