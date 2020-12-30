@@ -16,7 +16,7 @@
 ################################################################################
 
 autoreconf -i
-if [ "$FUZZER" = "ifcg" ]; then
+if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "baseline" ]; then
 sed -i "s/-O2/-O0/g" configure
 ./configure --enable-lib-only
 sed -i "s/\$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/\$(CCLD) \$(AM_CFLAGS)/g" lib/Makefile

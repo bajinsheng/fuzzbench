@@ -4,3 +4,7 @@
 [submodule "fuzzers/ifcg/fuzzinfer"]
 	path = fuzzers/ifcg/fuzzinfer
 	url = https://github.com/bajinsheng/OCG
+[submodule "fuzzers/baseline/fuzzinfer"]
+	path = fuzzers/baseline/fuzzinfer
+	url = https://github.com/bajinsheng/OCG
+	branch = baseline
