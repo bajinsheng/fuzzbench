@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 ################################################################################
-if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "baseline" ]; then
+if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "origin" ]; then
 $SRC/libfuzzer_ocg_build.sh
 else
 $SRC/gst-ci/fuzzing/build-oss-fuzz.sh
