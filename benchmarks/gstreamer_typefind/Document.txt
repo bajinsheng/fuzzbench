@@ -1,0 +1,27 @@
+Target file: gst-discover.c
+
+/* State machine */
+/**
+ * GstState:
+ * @GST_STATE_VOID_PENDING: no pending state.
+ * @GST_STATE_NULL        : the NULL state or initial state of an element.
+ * @GST_STATE_READY       : the element is ready to go to PAUSED.
+ * @GST_STATE_PAUSED      : the element is PAUSED, it is ready to accept and
+ *                          process data. Sink elements however only accept one
+ *                          buffer and then block.
+ * @GST_STATE_PLAYING     : the element is PLAYING, the #GstClock is running and
+ *                          the data is flowing.
+ *
+ * The possible states an element can be in. States can be changed using
+ * gst_element_set_state() and checked using gst_element_get_state().
+ */
+typedef enum {
+  GST_STATE_VOID_PENDING        = 0,
+  GST_STATE_NULL                = 1,
+  GST_STATE_READY               = 2,
+  GST_STATE_PAUSED              = 3,
+  GST_STATE_PLAYING             = 4
+} GstState;
+
+
+
