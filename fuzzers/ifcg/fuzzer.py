@@ -49,21 +49,28 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
     if extra_flags is None:
         extra_flags = []
 
+    # Seperate out corpus and crash directories as sub-directories of
+    # |output_corpus| to avoid conflicts when corpus directory is reloaded.
+    crashes_dir = os.path.join(output_corpus, 'crashes')
+    output_corpus = os.path.join(output_corpus, 'corpus')
+    os.makedirs(crashes_dir)
+    os.makedirs(output_corpus)
+
     flags = [
-        # Run in fork mode to allow ignoring ooms, timeouts, crashes and
-        # continue fuzzing indefinitely.
-        #'-fork=1',
-        #'-ignore_ooms=1',
-        #'-ignore_timeouts=1',
-        #'-ignore_crashes=1',
+        '-ignore_ooms=1',
+        '-ignore_timeouts=1',
+        '-ignore_crashes=1',
+	    '-print_final_stats=1',
         '-rss_limit_mb=48480',
-        '-print_final_stats=1',
         # `close_fd_mask` to prevent too much logging output from the target.
-        '-close_fd_mask=3',
+        #'-close_fd_mask=3',
 
         # Don't use LSAN's leak detection. Other fuzzers won't be using it and
         # using it will cause libFuzzer to find "crashes" no one cares about.
         '-detect_leaks=0',
+
+        # Store crashes along with corpus for bug based benchmarking.
+        f'-artifact_prefix={crashes_dir}/',
     ]
     flags += extra_flags
     if 'ADDITIONAL_ARGS' in os.environ:
@@ -72,7 +79,6 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
     if dictionary_path:
         flags.append('-dict=' + dictionary_path)
 
-    os.environ['ASAN_OPTIONS'] = 'abort_on_error=1,symbolize=1'
     command = [target_binary] + flags + [output_corpus, input_corpus]
     print('[run_fuzzer] Running command: ' + ' '.join(command))
     subprocess.check_call(command)
