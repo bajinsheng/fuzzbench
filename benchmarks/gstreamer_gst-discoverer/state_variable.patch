@@ -1,0 +1,12 @@
+diff -c -r gstreamer/gst/gstelement.c gstreamer_patched/gst/gstelement.c
+*** gstreamer/gst/gstelement.c  2021-01-05 14:40:57.817419546 +0800
+--- gstreamer_patched/gst/gstelement.c  2021-01-05 14:41:05.717459897 +0800
+***************
+*** 2890,2895 ****
+--- 2890,2896 ----
+  GstStateChangeReturn
+  gst_element_set_state (GstElement * element, GstState state)
+  {
++   printf("-------------------  %d -> %d\n", GST_STATE (element), state);
+    GstElementClass *oclass;
+    GstStateChangeReturn result = GST_STATE_CHANGE_FAILURE;

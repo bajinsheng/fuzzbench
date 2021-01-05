@@ -1,0 +1,584 @@
+diff -r -c openssl/ssl/statem/statem.c openssl_patched/ssl/statem/statem.c
+*** openssl/ssl/statem/statem.c	2021-01-05 13:39:18.705270294 +0800
+--- openssl_patched/ssl/statem/statem.c	2021-01-05 13:46:03.246703811 +0800
+***************
+*** 97,102 ****
+--- 97,103 ----
+  void ossl_statem_clear(SSL *s)
+  {
+      s->statem.state = MSG_FLOW_UNINITED;
++     printf("-------------------  %d -> %d\n", s->statem.hand_state, TLS_ST_BEFORE);
+      s->statem.hand_state = TLS_ST_BEFORE;
+      s->statem.in_init = 1;
+      s->statem.no_cert_verify = 0;
+***************
+*** 247,252 ****
+--- 248,254 ----
+       * SSL_state_string() and SSL_state_string_long() will return something
+       * sensible.
+       */
++     printf("-------------------  %d -> %d\n", s->statem.hand_state, TLS_ST_SR_CLNT_HELLO);
+      s->statem.hand_state = TLS_ST_SR_CLNT_HELLO;
+  }
+
+***************
+*** 342,347 ****
+--- 344,350 ----
+      if (st->state == MSG_FLOW_UNINITED
+              || st->state == MSG_FLOW_FINISHED) {
+          if (st->state == MSG_FLOW_UNINITED) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_BEFORE);
+              st->hand_state = TLS_ST_BEFORE;
+              st->request_state = TLS_ST_BEFORE;
+          }
+diff -r -c openssl/ssl/statem/statem_srvr.c openssl_patched/ssl/statem/statem_srvr.c
+*** openssl/ssl/statem/statem_srvr.c	2021-01-05 13:39:18.709270303 +0800
+--- openssl_patched/ssl/statem/statem_srvr.c	2021-01-05 14:01:04.372337377 +0800
+***************
+*** 70,81 ****
+--- 70,83 ----
+      case TLS_ST_EARLY_DATA:
+          if (s->hello_retry_request == SSL_HRR_PENDING) {
+              if (mt == SSL3_MT_CLIENT_HELLO) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CLNT_HELLO);
+                  st->hand_state = TLS_ST_SR_CLNT_HELLO;
+                  return 1;
+              }
+              break;
+          } else if (s->ext.early_data == SSL_EARLY_DATA_ACCEPTED) {
+              if (mt == SSL3_MT_END_OF_EARLY_DATA) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_END_OF_EARLY_DATA);
+                  st->hand_state = TLS_ST_SR_END_OF_EARLY_DATA;
+                  return 1;
+              }
+***************
+*** 87,97 ****
+--- 89,101 ----
+      case TLS_ST_SW_FINISHED:
+          if (s->s3.tmp.cert_request) {
+              if (mt == SSL3_MT_CERTIFICATE) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CERT);
+                  st->hand_state = TLS_ST_SR_CERT;
+                  return 1;
+              }
+          } else {
+              if (mt == SSL3_MT_FINISHED) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_FINISHED);
+                  st->hand_state = TLS_ST_SR_FINISHED;
+                  return 1;
+              }
+***************
+*** 101,111 ****
+--- 105,117 ----
+      case TLS_ST_SR_CERT:
+          if (s->session->peer == NULL) {
+              if (mt == SSL3_MT_FINISHED) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_FINISHED);
+                  st->hand_state = TLS_ST_SR_FINISHED;
+                  return 1;
+              }
+          } else {
+              if (mt == SSL3_MT_CERTIFICATE_VERIFY) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CERT_VRFY);
+                  st->hand_state = TLS_ST_SR_CERT_VRFY;
+                  return 1;
+              }
+***************
+*** 114,119 ****
+--- 120,126 ----
+
+      case TLS_ST_SR_CERT_VRFY:
+          if (mt == SSL3_MT_FINISHED) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_FINISHED);
+              st->hand_state = TLS_ST_SR_FINISHED;
+              return 1;
+          }
+***************
+*** 129,139 ****
+--- 136,148 ----
+
+          if (mt == SSL3_MT_CERTIFICATE
+                  && s->post_handshake_auth == SSL_PHA_REQUESTED) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CERT);
+              st->hand_state = TLS_ST_SR_CERT;
+              return 1;
+          }
+
+          if (mt == SSL3_MT_KEY_UPDATE) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_KEY_UPDATE);
+              st->hand_state = TLS_ST_SR_KEY_UPDATE;
+              return 1;
+          }
+***************
+*** 171,176 ****
+--- 180,186 ----
+      case TLS_ST_OK:
+      case DTLS_ST_SW_HELLO_VERIFY_REQUEST:
+          if (mt == SSL3_MT_CLIENT_HELLO) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CLNT_HELLO);
+              st->hand_state = TLS_ST_SR_CLNT_HELLO;
+              return 1;
+          }
+***************
+*** 201,215 ****
+--- 211,228 ----
+                                   SSL_R_PEER_DID_NOT_RETURN_A_CERTIFICATE);
+                          return 0;
+                      }
++                     printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_KEY_EXCH);
+                      st->hand_state = TLS_ST_SR_KEY_EXCH;
+                      return 1;
+                  }
+              } else {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_KEY_EXCH);
+                  st->hand_state = TLS_ST_SR_KEY_EXCH;
+                  return 1;
+              }
+          } else if (s->s3.tmp.cert_request) {
+              if (mt == SSL3_MT_CERTIFICATE) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CERT);
+                  st->hand_state = TLS_ST_SR_CERT;
+                  return 1;
+              }
+***************
+*** 218,223 ****
+--- 231,237 ----
+
+      case TLS_ST_SR_CERT:
+          if (mt == SSL3_MT_CLIENT_KEY_EXCHANGE) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_KEY_EXCH);
+              st->hand_state = TLS_ST_SR_KEY_EXCH;
+              return 1;
+          }
+***************
+*** 240,250 ****
+--- 254,266 ----
+                   * not sent. Also for GOST ciphersuites when the client uses
+                   * its key from the certificate for key exchange.
+                   */
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CHANGE);
+                  st->hand_state = TLS_ST_SR_CHANGE;
+                  return 1;
+              }
+          } else {
+              if (mt == SSL3_MT_CERTIFICATE_VERIFY) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CERT_VRFY);
+                  st->hand_state = TLS_ST_SR_CERT_VRFY;
+                  return 1;
+              }
+***************
+*** 253,258 ****
+--- 269,275 ----
+
+      case TLS_ST_SR_CERT_VRFY:
+          if (mt == SSL3_MT_CHANGE_CIPHER_SPEC) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CHANGE);
+              st->hand_state = TLS_ST_SR_CHANGE;
+              return 1;
+          }
+***************
+*** 262,273 ****
+--- 279,292 ----
+  #ifndef OPENSSL_NO_NEXTPROTONEG
+          if (s->s3.npn_seen) {
+              if (mt == SSL3_MT_NEXT_PROTO) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_NEXT_PROTO);
+                  st->hand_state = TLS_ST_SR_NEXT_PROTO;
+                  return 1;
+              }
+          } else {
+  #endif
+              if (mt == SSL3_MT_FINISHED) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_FINISHED);
+                  st->hand_state = TLS_ST_SR_FINISHED;
+                  return 1;
+              }
+***************
+*** 279,284 ****
+--- 298,304 ----
+  #ifndef OPENSSL_NO_NEXTPROTONEG
+      case TLS_ST_SR_NEXT_PROTO:
+          if (mt == SSL3_MT_FINISHED) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_FINISHED);
+              st->hand_state = TLS_ST_SR_FINISHED;
+              return 1;
+          }
+***************
+*** 287,292 ****
+--- 307,313 ----
+
+      case TLS_ST_SW_FINISHED:
+          if (mt == SSL3_MT_CHANGE_CIPHER_SPEC) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SR_CHANGE);
+              st->hand_state = TLS_ST_SR_CHANGE;
+              return 1;
+          }
+***************
+*** 426,439 ****
+--- 447,463 ----
+
+      case TLS_ST_OK:
+          if (s->key_update != SSL_KEY_UPDATE_NONE) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_KEY_UPDATE);
+              st->hand_state = TLS_ST_SW_KEY_UPDATE;
+              return WRITE_TRAN_CONTINUE;
+          }
+          if (s->post_handshake_auth == SSL_PHA_REQUEST_PENDING) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_REQ);
+              st->hand_state = TLS_ST_SW_CERT_REQ;
+              return WRITE_TRAN_CONTINUE;
+          }
+          if (s->ext.extra_tickets_expected > 0) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SESSION_TICKET);
+              st->hand_state = TLS_ST_SW_SESSION_TICKET;
+              return WRITE_TRAN_CONTINUE;
+          }
+***************
+*** 441,494 ****
+          return WRITE_TRAN_FINISHED;
+
+      case TLS_ST_SR_CLNT_HELLO:
+          st->hand_state = TLS_ST_SW_SRVR_HELLO;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_SRVR_HELLO:
+          if ((s->options & SSL_OP_ENABLE_MIDDLEBOX_COMPAT) != 0
+!                 && s->hello_retry_request != SSL_HRR_COMPLETE)
+              st->hand_state = TLS_ST_SW_CHANGE;
+!         else if (s->hello_retry_request == SSL_HRR_PENDING)
+              st->hand_state = TLS_ST_EARLY_DATA;
+!         else
+              st->hand_state = TLS_ST_SW_ENCRYPTED_EXTENSIONS;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CHANGE:
+!         if (s->hello_retry_request == SSL_HRR_PENDING)
+              st->hand_state = TLS_ST_EARLY_DATA;
+!         else
+              st->hand_state = TLS_ST_SW_ENCRYPTED_EXTENSIONS;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_ENCRYPTED_EXTENSIONS:
+!         if (s->hit)
+              st->hand_state = TLS_ST_SW_FINISHED;
+!         else if (send_certificate_request(s))
+              st->hand_state = TLS_ST_SW_CERT_REQ;
+!         else
+              st->hand_state = TLS_ST_SW_CERT;
+
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT_REQ:
+          if (s->post_handshake_auth == SSL_PHA_REQUEST_PENDING) {
+              s->post_handshake_auth = SSL_PHA_REQUESTED;
+              st->hand_state = TLS_ST_OK;
+          } else {
+              st->hand_state = TLS_ST_SW_CERT;
+          }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT:
+          st->hand_state = TLS_ST_SW_CERT_VRFY;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT_VRFY:
+          st->hand_state = TLS_ST_SW_FINISHED;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_FINISHED:
+          st->hand_state = TLS_ST_EARLY_DATA;
+          return WRITE_TRAN_CONTINUE;
+
+--- 465,540 ----
+          return WRITE_TRAN_FINISHED;
+
+      case TLS_ST_SR_CLNT_HELLO:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SRVR_HELLO);
+          st->hand_state = TLS_ST_SW_SRVR_HELLO;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_SRVR_HELLO:
+          if ((s->options & SSL_OP_ENABLE_MIDDLEBOX_COMPAT) != 0
+!                 && s->hello_retry_request != SSL_HRR_COMPLETE) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CHANGE);
+              st->hand_state = TLS_ST_SW_CHANGE;
+!         }
+!         else if (s->hello_retry_request == SSL_HRR_PENDING) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_EARLY_DATA);
+              st->hand_state = TLS_ST_EARLY_DATA;
+!         }
+!         else {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_ENCRYPTED_EXTENSIONS);
+              st->hand_state = TLS_ST_SW_ENCRYPTED_EXTENSIONS;
++         }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CHANGE:
+!         if (s->hello_retry_request == SSL_HRR_PENDING) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_EARLY_DATA);
+              st->hand_state = TLS_ST_EARLY_DATA;
+!         }
+!         else {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_ENCRYPTED_EXTENSIONS);
+              st->hand_state = TLS_ST_SW_ENCRYPTED_EXTENSIONS;
++         }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_ENCRYPTED_EXTENSIONS:
+!         if (s->hit) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_FINISHED);
+              st->hand_state = TLS_ST_SW_FINISHED;
+!         }
+!         else if (send_certificate_request(s)) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_REQ);
+              st->hand_state = TLS_ST_SW_CERT_REQ;
+!         }
+!         else {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT);
+              st->hand_state = TLS_ST_SW_CERT;
++         }
+
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT_REQ:
+          if (s->post_handshake_auth == SSL_PHA_REQUEST_PENDING) {
+              s->post_handshake_auth = SSL_PHA_REQUESTED;
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
+          } else {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT);
+              st->hand_state = TLS_ST_SW_CERT;
+          }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_VRFY);
+          st->hand_state = TLS_ST_SW_CERT_VRFY;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CERT_VRFY:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_FINISHED);
+          st->hand_state = TLS_ST_SW_FINISHED;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_FINISHED:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_EARLY_DATA);
+          st->hand_state = TLS_ST_EARLY_DATA;
+          return WRITE_TRAN_CONTINUE;
+
+***************
+*** 508,524 ****
+               * If we're not going to renew the ticket then we just finish the
+               * handshake at this point.
+               */
+              st->hand_state = TLS_ST_OK;
+              return WRITE_TRAN_CONTINUE;
+          }
+!         if (s->num_tickets > s->sent_tickets)
+              st->hand_state = TLS_ST_SW_SESSION_TICKET;
+!         else
+              st->hand_state = TLS_ST_OK;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SR_KEY_UPDATE:
+      case TLS_ST_SW_KEY_UPDATE:
+          st->hand_state = TLS_ST_OK;
+          return WRITE_TRAN_CONTINUE;
+
+--- 554,576 ----
+               * If we're not going to renew the ticket then we just finish the
+               * handshake at this point.
+               */
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
+              return WRITE_TRAN_CONTINUE;
+          }
+!         if (s->num_tickets > s->sent_tickets) {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SESSION_TICKET);
+              st->hand_state = TLS_ST_SW_SESSION_TICKET;
+!         }
+!         else {
+!             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
++         }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SR_KEY_UPDATE:
+      case TLS_ST_SW_KEY_UPDATE:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+          st->hand_state = TLS_ST_OK;
+          return WRITE_TRAN_CONTINUE;
+
+***************
+*** 531,536 ****
+--- 583,589 ----
+              return WRITE_TRAN_CONTINUE;
+          } else if (s->hit || s->num_tickets <= s->sent_tickets) {
+              /* We've written enough tickets out. */
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
+          }
+          return WRITE_TRAN_CONTINUE;
+***************
+*** 562,567 ****
+--- 615,621 ----
+      case TLS_ST_OK:
+          if (st->request_state == TLS_ST_SW_HELLO_REQ) {
+              /* We must be trying to renegotiate */
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_HELLO_REQ);
+              st->hand_state = TLS_ST_SW_HELLO_REQ;
+              st->request_state = TLS_ST_BEFORE;
+              return WRITE_TRAN_CONTINUE;
+***************
+*** 578,595 ****
+--- 632,653 ----
+          return WRITE_TRAN_FINISHED;
+
+      case TLS_ST_SW_HELLO_REQ:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+          st->hand_state = TLS_ST_OK;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SR_CLNT_HELLO:
+          if (SSL_IS_DTLS(s) && !s->d1->cookie_verified
+              && (SSL_get_options(s) & SSL_OP_COOKIE_EXCHANGE)) {
++             printf("-------------------  %d -> %d\n", st->hand_state, DTLS_ST_SW_HELLO_VERIFY_REQUEST);
+              st->hand_state = DTLS_ST_SW_HELLO_VERIFY_REQUEST;
+          } else if (s->renegotiate == 0 && !SSL_IS_FIRST_HANDSHAKE(s)) {
+              /* We must have rejected the renegotiation */
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
+              return WRITE_TRAN_CONTINUE;
+          } else {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SRVR_HELLO);
+              st->hand_state = TLS_ST_SW_SRVR_HELLO;
+          }
+          return WRITE_TRAN_CONTINUE;
+***************
+*** 599,619 ****
+
+      case TLS_ST_SW_SRVR_HELLO:
+          if (s->hit) {
+!             if (s->ext.ticket_expected)
+                  st->hand_state = TLS_ST_SW_SESSION_TICKET;
+!             else
+                  st->hand_state = TLS_ST_SW_CHANGE;
+          } else {
+              /* Check if it is anon DH or anon ECDH, */
+              /* normal PSK or SRP */
+              if (!(s->s3.tmp.new_cipher->algorithm_auth &
+                    (SSL_aNULL | SSL_aSRP | SSL_aPSK))) {
+                  st->hand_state = TLS_ST_SW_CERT;
+              } else if (send_server_key_exchange(s)) {
+                  st->hand_state = TLS_ST_SW_KEY_EXCH;
+              } else if (send_certificate_request(s)) {
+                  st->hand_state = TLS_ST_SW_CERT_REQ;
+              } else {
+                  st->hand_state = TLS_ST_SW_SRVR_DONE;
+              }
+          }
+--- 657,685 ----
+
+      case TLS_ST_SW_SRVR_HELLO:
+          if (s->hit) {
+!             if (s->ext.ticket_expected) {
+!                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SESSION_TICKET);
+                  st->hand_state = TLS_ST_SW_SESSION_TICKET;
+!             }
+!             else {
+!                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CHANGE);
+                  st->hand_state = TLS_ST_SW_CHANGE;
++             }
+          } else {
+              /* Check if it is anon DH or anon ECDH, */
+              /* normal PSK or SRP */
+              if (!(s->s3.tmp.new_cipher->algorithm_auth &
+                    (SSL_aNULL | SSL_aSRP | SSL_aPSK))) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT);
+                  st->hand_state = TLS_ST_SW_CERT;
+              } else if (send_server_key_exchange(s)) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_KEY_EXCH);
+                  st->hand_state = TLS_ST_SW_KEY_EXCH;
+              } else if (send_certificate_request(s)) {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_REQ);
+                  st->hand_state = TLS_ST_SW_CERT_REQ;
+              } else {
++                 printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SRVR_DONE);
+                  st->hand_state = TLS_ST_SW_SRVR_DONE;
+              }
+          }
+***************
+*** 621,626 ****
+--- 687,693 ----
+
+      case TLS_ST_SW_CERT:
+          if (s->ext.status_expected) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_STATUS);
+              st->hand_state = TLS_ST_SW_CERT_STATUS;
+              return WRITE_TRAN_CONTINUE;
+          }
+***************
+*** 628,633 ****
+--- 695,701 ----
+
+      case TLS_ST_SW_CERT_STATUS:
+          if (send_server_key_exchange(s)) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_KEY_EXCH);
+              st->hand_state = TLS_ST_SW_KEY_EXCH;
+              return WRITE_TRAN_CONTINUE;
+          }
+***************
+*** 635,646 ****
+--- 703,716 ----
+
+      case TLS_ST_SW_KEY_EXCH:
+          if (send_certificate_request(s)) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CERT_REQ);
+              st->hand_state = TLS_ST_SW_CERT_REQ;
+              return WRITE_TRAN_CONTINUE;
+          }
+          /* Fall through */
+
+      case TLS_ST_SW_CERT_REQ:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SRVR_DONE);
+          st->hand_state = TLS_ST_SW_SRVR_DONE;
+          return WRITE_TRAN_CONTINUE;
+
+***************
+*** 649,668 ****
+--- 719,743 ----
+
+      case TLS_ST_SR_FINISHED:
+          if (s->hit) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+              st->hand_state = TLS_ST_OK;
+              return WRITE_TRAN_CONTINUE;
+          } else if (s->ext.ticket_expected) {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_SESSION_TICKET);
+              st->hand_state = TLS_ST_SW_SESSION_TICKET;
+          } else {
++             printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CHANGE);
+              st->hand_state = TLS_ST_SW_CHANGE;
+          }
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_SESSION_TICKET:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_CHANGE);
+          st->hand_state = TLS_ST_SW_CHANGE;
+          return WRITE_TRAN_CONTINUE;
+
+      case TLS_ST_SW_CHANGE:
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_SW_FINISHED);
+          st->hand_state = TLS_ST_SW_FINISHED;
+          return WRITE_TRAN_CONTINUE;
+
+***************
+*** 670,675 ****
+--- 745,751 ----
+          if (s->hit) {
+              return WRITE_TRAN_FINISHED;
+          }
++         printf("-------------------  %d -> %d\n", st->hand_state, TLS_ST_OK);
+          st->hand_state = TLS_ST_OK;
+          return WRITE_TRAN_CONTINUE;
+      }

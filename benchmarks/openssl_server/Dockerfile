@@ -16,7 +16,8 @@
 
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make
-RUN git clone --depth 1 https://github.com/openssl/openssl.git
+COPY state_variable.patch $SRC/
+RUN git clone https://github.com/openssl/openssl.git
 WORKDIR openssl
 COPY build.sh *.options $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt

@@ -1,0 +1,98 @@
+diff -r -c nghttp2/lib/nghttp2_session.c nghttp2_patched/lib/nghttp2_session.c
+*** nghttp2/lib/nghttp2_session.c       2021-01-05 10:43:23.610593903 +0800
+--- nghttp2_patched/lib/nghttp2_session.c       2021-01-05 11:04:27.431977256 +0800
+***************
+*** 895,900 ****
+--- 895,901 ----
+      return 0;
+    case NGHTTP2_RST_STREAM:
+      if (stream) {
++       printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_CLOSING);
+        stream->state = NGHTTP2_STREAM_CLOSING;
+      }
+      nghttp2_outbound_queue_push(&session->ob_reg, item);
+***************
+*** 1110,1115 ****
+--- 1111,1117 ----
+      }
+    } else {
+      stream->flags = flags;
++     printf("-------------------  %d -> %d\n", stream->state, initial_state);
+      stream->state = initial_state;
+      stream->weight = pri_spec->weight;
+      stream->stream_user_data = stream_user_data;
+***************
+*** 2619,2624 ****
+--- 2621,2627 ----
+
+      switch (frame->headers.cat) {
+      case NGHTTP2_HCAT_REQUEST: {
++       printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_OPENING);
+        stream->state = NGHTTP2_STREAM_OPENING;
+        if (frame->hd.flags & NGHTTP2_FLAG_END_STREAM) {
+          nghttp2_stream_shutdown(stream, NGHTTP2_SHUT_WR);
+***************
+*** 2646,2651 ****
+--- 2649,2655 ----
+        ++session->num_outgoing_streams;
+      /* Fall through */
+      case NGHTTP2_HCAT_RESPONSE:
++       printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_OPENED);
+        stream->state = NGHTTP2_STREAM_OPENED;
+      /* Fall through */
+      case NGHTTP2_HCAT_HEADERS:
+***************
+*** 3954,3959 ****
+--- 3958,3964 ----
+      return session_inflate_handle_invalid_connection(
+          session, frame, NGHTTP2_ERR_STREAM_CLOSED, "HEADERS: stream closed");
+    }
++   printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_OPENED);
+    stream->state = NGHTTP2_STREAM_OPENED;
+    rv = session_call_on_begin_headers(session, frame);
+    if (rv != 0) {
+diff -r -c nghttp2/lib/nghttp2_stream.c nghttp2_patched/lib/nghttp2_stream.c
+*** nghttp2/lib/nghttp2_stream.c        2021-01-05 10:43:23.610593903 +0800
+--- nghttp2_patched/lib/nghttp2_stream.c        2021-01-05 11:01:30.050889530 +0800
+***************
+*** 67,72 ****
+--- 67,73 ----
+
+    stream->stream_id = stream_id;
+    stream->flags = flags;
++   printf("-------------------  %d -> %d\n", stream->state, initial_state);
+    stream->state = initial_state;
+    stream->shut_flags = NGHTTP2_SHUT_NONE;
+    stream->stream_user_data = stream_user_data;
+***************
+*** 572,577 ****
+--- 573,579 ----
+  }
+
+  void nghttp2_stream_promise_fulfilled(nghttp2_stream *stream) {
++   printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_OPENED);
+    stream->state = NGHTTP2_STREAM_OPENED;
+    stream->flags = (uint8_t)(stream->flags & ~NGHTTP2_STREAM_FLAG_PUSH);
+  }
+diff -r -c nghttp2/tests/nghttp2_session_test.c nghttp2_patched/tests/nghttp2_session_test.c
+*** nghttp2/tests/nghttp2_session_test.c        2021-01-05 10:43:23.634593900 +0800
+--- nghttp2_patched/tests/nghttp2_session_test.c        2021-01-05 13:19:47.326501574 +0800
+***************
+*** 954,959 ****
+--- 954,960 ----
+    CU_ASSERT(NULL == item);
+
+    /* This is normal case. DATA is acceptable. */
++   printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_OPENED);
+    stream->state = NGHTTP2_STREAM_OPENED;
+
+    ud.data_chunk_recv_cb_called = 0;
+***************
+*** 3653,3658 ****
+--- 3654,3660 ----
+    stream = open_sent_stream(session, 1);
+
+    /* Attempt to PUSH_PROMISE against stream in closing state */
++   printf("-------------------  %d -> %d\n", stream->state, NGHTTP2_STREAM_CLOSING);
+    stream->state = NGHTTP2_STREAM_CLOSING;
+    frame.push_promise.promised_stream_id = 6;

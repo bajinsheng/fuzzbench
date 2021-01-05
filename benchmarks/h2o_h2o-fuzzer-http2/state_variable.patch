@@ -1,0 +1,14 @@
+diff -r -c h2o/include/h2o/http2_internal.h h2o_patched/include/h2o/http2_internal.h
+*** h2o/include/h2o/http2_internal.h    2021-01-05 09:42:57.571444091 +0800
+--- h2o_patched/include/h2o/http2_internal.h    2021-01-05 09:46:56.377215961 +0800
+***************
+*** 297,302 ****
+--- 297,303 ----
+
+  inline void h2o_http2_stream_set_state(h2o_http2_conn_t *conn, h2o_http2_stream_t *stream, h2o_http2_stream_state_t new_state)
+  {
++     printf("-------------------  %d -> %d\n", stream->state, new_state);
+      switch (new_state) {
+      case H2O_HTTP2_STREAM_STATE_IDLE:
+          assert(!"FIXME");
+

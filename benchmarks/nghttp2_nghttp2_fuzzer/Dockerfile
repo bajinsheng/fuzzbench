@@ -16,6 +16,7 @@
 
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake libtool pkg-config
+COPY state_variable.patch $SRC/
 RUN git clone --depth 1 https://github.com/nghttp2/nghttp2.git
 WORKDIR nghttp2
 COPY build.sh *.options $SRC/

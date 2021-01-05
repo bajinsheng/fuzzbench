@@ -1,0 +1,12 @@
+diff -c -r curl/lib/imap.c curl_patched/lib/imap.c
+*** curl/lib/imap.c     2021-01-05 15:00:28.257472504 +0800
+--- curl_patched/lib/imap.c     2021-01-05 15:18:59.418148203 +0800
+***************
+*** 410,415 ****
+--- 410,416 ----
+            (void *)imapc, names[imapc->state], names[newstate]);
+  #endif
+
++   printf("-------------------  %d -> %d\n", imapc->state, newstate);
+    imapc->state = newstate;
+  }

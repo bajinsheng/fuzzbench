@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 ################################################################################
+pushd $SRC/
+patch -p0 -i state_variable.patch
+popd
+
 if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "origin" ]; then
 $SRC/libfuzzer_ocg_build.sh
 else

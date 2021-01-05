@@ -1,0 +1,13 @@
+diff -c -r curl/lib/multi.c curl_patched/lib/multi.c
+*** curl/lib/multi.c    2021-01-05 15:00:28.261472536 +0800
+--- curl_patched/lib/multi.c    2021-01-05 15:02:38.182487842 +0800
+***************
+*** 123,128 ****
+--- 123,129 ----
+  )
+  {
+    CURLMstate oldstate = data->mstate;
++   printf("-------------------  %d -> %d\n", oldstate, state);
+    static const init_multistate_func finit[CURLM_STATE_LAST] = {
+      NULL,              /* INIT */
+      NULL,              /* CONNECT_PEND */

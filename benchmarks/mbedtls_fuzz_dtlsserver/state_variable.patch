@@ -1,0 +1,138 @@
+diff -r -c mbedtls/library/ssl_srv.c mbedtls_patched/library/ssl_srv.c
+*** mbedtls/library/ssl_srv.c   2021-01-05 14:09:10.941228078 +0800
+--- mbedtls_patched/library/ssl_srv.c   2021-01-05 14:21:40.570611815 +0800
+***************
+*** 2751,2756 ****
+--- 2751,2757 ----
+      ssl->out_msgtype = MBEDTLS_SSL_MSG_HANDSHAKE;
+      ssl->out_msg[0]  = MBEDTLS_SSL_HS_HELLO_VERIFY_REQUEST;
+
++     printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_SERVER_HELLO_VERIFY_REQUEST_SENT);
+      ssl->state = MBEDTLS_SSL_SERVER_HELLO_VERIFY_REQUEST_SENT;
+
+      if( ( ret = mbedtls_ssl_write_handshake_msg( ssl ) ) != 0 )
+***************
+*** 2893,2898 ****
+--- 2894,2900 ----
+           * Resuming a session
+           */
+          n = ssl->session_negotiate->id_len;
++         printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_SERVER_CHANGE_CIPHER_SPEC);
+          ssl->state = MBEDTLS_SSL_SERVER_CHANGE_CIPHER_SPEC;
+
+          if( ( ret = mbedtls_ssl_derive_keys( ssl ) ) != 0 )
+***************
+*** 4675,4680 ****
+--- 4677,4683 ----
+      switch( ssl->state )
+      {
+          case MBEDTLS_SSL_HELLO_REQUEST:
++             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_CLIENT_HELLO);
+              ssl->state = MBEDTLS_SSL_CLIENT_HELLO;
+              break;
+
+***************
+*** 4764,4769 ****
+--- 4767,4773 ----
+
+          case MBEDTLS_SSL_FLUSH_BUFFERS:
+              MBEDTLS_SSL_DEBUG_MSG( 2, ( "handshake: done" ) );
++             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HANDSHAKE_WRAPUP);
+              ssl->state = MBEDTLS_SSL_HANDSHAKE_WRAPUP;
+              break;
+
+diff -r -c mbedtls/library/ssl_tls.c mbedtls_patched/library/ssl_tls.c
+*** mbedtls/library/ssl_tls.c   2021-01-05 14:09:10.945228141 +0800
+--- mbedtls_patched/library/ssl_tls.c   2021-01-05 14:22:46.399287105 +0800
+***************
+*** 3402,3413 ****
+      if( ssl->handshake->resume != 0 )
+      {
+  #if defined(MBEDTLS_SSL_CLI_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_CLIENT )
+              ssl->state = MBEDTLS_SSL_HANDSHAKE_WRAPUP;
+  #endif
+  #if defined(MBEDTLS_SSL_SRV_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_SERVER )
+              ssl->state = MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC;
+  #endif
+      }
+      else
+--- 3402,3417 ----
+      if( ssl->handshake->resume != 0 )
+      {
+  #if defined(MBEDTLS_SSL_CLI_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_CLIENT ) {
+!             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HANDSHAKE_WRAPUP);
+              ssl->state = MBEDTLS_SSL_HANDSHAKE_WRAPUP;
++         }
+  #endif
+  #if defined(MBEDTLS_SSL_SRV_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_SERVER ) {
+!             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC);
+              ssl->state = MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC;
++         }
+  #endif
+      }
+      else
+***************
+*** 3550,3561 ****
+      if( ssl->handshake->resume != 0 )
+      {
+  #if defined(MBEDTLS_SSL_CLI_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_CLIENT )
+              ssl->state = MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC;
+  #endif
+  #if defined(MBEDTLS_SSL_SRV_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_SERVER )
+              ssl->state = MBEDTLS_SSL_HANDSHAKE_WRAPUP;
+  #endif
+      }
+      else
+--- 3554,3569 ----
+      if( ssl->handshake->resume != 0 )
+      {
+  #if defined(MBEDTLS_SSL_CLI_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_CLIENT ) {
+!             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC);
+              ssl->state = MBEDTLS_SSL_CLIENT_CHANGE_CIPHER_SPEC;
++         }
+  #endif
+  #if defined(MBEDTLS_SSL_SRV_C)
+!         if( ssl->conf->endpoint == MBEDTLS_SSL_IS_SERVER ) {
+!             printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HANDSHAKE_WRAPUP);
+              ssl->state = MBEDTLS_SSL_HANDSHAKE_WRAPUP;
++         }
+  #endif
+      }
+      else
+***************
+*** 3927,3932 ****
+--- 3935,3941 ----
+      ((void) partial);
+  #endif
+
++     printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HELLO_REQUEST);
+      ssl->state = MBEDTLS_SSL_HELLO_REQUEST;
+
+      /* Cancel any possibly running timer */
+***************
+*** 5864,5869 ****
+--- 5873,5879 ----
+      }
+  #endif
+
++     printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HELLO_REQUEST);
+      ssl->state = MBEDTLS_SSL_HELLO_REQUEST;
+      ssl->renego_status = MBEDTLS_SSL_RENEGOTIATION_IN_PROGRESS;
+
+***************
+*** 6739,6744 ****
+--- 6749,6755 ----
+       * Most of them already set to the correct value by mbedtls_ssl_init() and
+       * mbedtls_ssl_reset(), so we only need to set the remaining ones.
+       */
++     printf("-------------------  %d -> %d\n", ssl->state, MBEDTLS_SSL_HANDSHAKE_OVER);
+      ssl->state = MBEDTLS_SSL_HANDSHAKE_OVER;
+
+      ssl->major_ver = MBEDTLS_SSL_MAJOR_VERSION_3;
