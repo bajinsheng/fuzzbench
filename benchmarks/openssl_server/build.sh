@@ -15,9 +15,9 @@
 #
 ################################################################################
 
-pushd $SRC/
-patch -p0 -i state_variable.patch
-popd
+#pushd $SRC/
+#patch -p0 -i state_variable.patch
+#popd
 
 CONFIGURE_FLAGS=""
 if [[ $CFLAGS = *sanitize=memory* ]]
