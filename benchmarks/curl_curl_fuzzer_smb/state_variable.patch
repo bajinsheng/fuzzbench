@@ -1,20 +1,19 @@
 diff -c -r curl/lib/smb.c curl_patched/lib/smb.c
 *** curl/lib/smb.c      2021-01-05 15:00:28.265472566 +0800
---- curl_patched/lib/smb.c      2021-01-05 15:22:44.427847240 +0800
+--- curl_patched/lib/smb.c      2021-01-05 21:34:06.852436833 +0800
 ***************
-*** 222,228 ****
-      "SMB_DONE",
-      /* LAST */
-    };
-!
-    if(req->state != newstate)
-      infof(conn->data, "SMB request %p state change from %s to %s\n",
-            (void *)req, names[req->state], names[newstate]);
---- 222,228 ----
-      "SMB_DONE",
-      /* LAST */
-    };
-!   printf("-------------------  %d -> %d\n", req->state, newstate);
-    if(req->state != newstate)
-      infof(conn->data, "SMB request %p state change from %s to %s\n",
-            (void *)req, names[req->state], names[newstate]);
+*** 201,207 ****
+      infof(conn->data, "SMB conn %p state change from %s to %s\n",
+            (void *)smbc, names[smbc->state], names[newstate]);
+  #endif
+! 
+    smbc->state = newstate;
+  }
+  
+--- 201,207 ----
+      infof(conn->data, "SMB conn %p state change from %s to %s\n",
+            (void *)smbc, names[smbc->state], names[newstate]);
+  #endif
+!   printf("-------------------  %d -> %d\n", smbc->state, newstate);
+    smbc->state = newstate;
+  }
