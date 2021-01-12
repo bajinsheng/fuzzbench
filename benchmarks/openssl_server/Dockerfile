@@ -21,4 +21,5 @@ RUN git clone https://github.com/openssl/openssl.git
 WORKDIR openssl
 COPY build.sh *.options $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
+ADD seeds /opt/seeds
 ENV  ALLOWLIST /out/allowlist.txt

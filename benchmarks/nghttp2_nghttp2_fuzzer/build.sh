@@ -34,8 +34,8 @@ $CXX $CXXFLAGS -std=c++11 -Ilib/includes \
     $LIB_FUZZING_ENGINE lib/.libs/libnghttp2.a
 
 cp $SRC/*.options $OUT
-
-zip -j $OUT/nghttp2_fuzzer_seed_corpus.zip fuzz/corpus/*/*
+cp -r /opt/seeds $OUT/
+#zip -j $OUT/nghttp2_fuzzer_seed_corpus.zip fuzz/corpus/*/*
 
 
 

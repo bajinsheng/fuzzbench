@@ -43,8 +43,8 @@ RUN \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-ci.git gst-ci && \
   cd $SRC/gst-ci && \
   git checkout -f aead7b4eb70fd7823fad26f1efd24f131091229e
-ADD https://people.freedesktop.org/~bilboed/gst-discoverer_seed_corpus.zip $SRC
-
+#ADD https://people.freedesktop.org/~bilboed/gst-discoverer_seed_corpus.zip $SRC
+ADD gst-discoverer_seed_corpus.zip $SRC
 WORKDIR gstreamer
 COPY build.sh $SRC/
 COPY libfuzzer_ocg_build.sh $SRC/
