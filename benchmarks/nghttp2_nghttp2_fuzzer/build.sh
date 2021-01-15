@@ -19,13 +19,11 @@
 #popd
 
 autoreconf -i
-if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "origin" ]; then
+
 sed -i "s/-O2/-O0/g" configure
 ./configure --enable-lib-only
 sed -i "s/\$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/\$(CCLD) \$(AM_CFLAGS)/g" lib/Makefile
-else
-./configure --enable-lib-only
-fi
+
 
 make all
 
