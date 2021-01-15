@@ -8,3 +8,6 @@
 	path = fuzzers/origin/fuzzinfer
 	url = https://github.com/bajinsheng/OCG
 	branch = baseline
+[submodule "fuzzers/libfuzzer/fuzzinfer"]
+	path = fuzzers/libfuzzer/fuzzinfer
+	url = https://github.com/bajinsheng/libfuzzer
