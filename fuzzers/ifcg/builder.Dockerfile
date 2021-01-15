@@ -17,7 +17,10 @@ FROM $parent_image
 
 COPY fuzzinfer /fuzzinfer
 RUN cd /fuzzinfer && \
-    CXX=clang++ LLVM_CONFIG=llvm-config ./build.sh && \
-    cp libFuzzer.a /usr/lib/libFuzzer.a && \
-    cp sanitizer/FuzzerOCGSanitizer.so /opt/FuzzerOCGSanitizer.so
+    (for f in *.cpp; do \
+      clang++ -stdlib=libc++ -fPIC -O2 -std=c++11 $f -c & \
+    done && wait) && \
+    ar r /usr/lib/libFuzzer.a *.o && \
+    clang++ `llvm-config --cxxflags` -Wl,-znodelete -fno-rtti -fPIC -shared sanitizer/FuzzerOCGSanitizer.cpp -o /opt/FuzzerOCGSanitizer.so `llvm-config --ldflags`
+
 

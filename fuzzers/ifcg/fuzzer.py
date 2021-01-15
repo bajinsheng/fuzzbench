@@ -60,8 +60,7 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
         '-ignore_ooms=1',
         '-ignore_timeouts=1',
         '-ignore_crashes=1',
-	    '-print_final_stats=1',
-        '-rss_limit_mb=3096',
+        '-print_final_stats=1',
         # `close_fd_mask` to prevent too much logging output from the target.
         #'-close_fd_mask=3',
 
