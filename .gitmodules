@@ -1,3 +1,6 @@
 [submodule "third_party/oss-fuzz"]
 	path = third_party/oss-fuzz
 	url = https://github.com/google/oss-fuzz.git
+[submodule "fuzzers/libfuzzer/fuzzinfer"]
+	path = fuzzers/libfuzzer/fuzzinfer
+	url = https://github.com/bajinsheng/libfuzzer
