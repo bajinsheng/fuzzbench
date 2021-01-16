@@ -210,7 +210,6 @@ def start_experiment(  # pylint: disable=too-many-arguments
         no_dictionaries=False,
         oss_fuzz_corpus=False):
     """Start a fuzzer benchmarking experiment."""
-    check_no_local_changes()
 
     validate_experiment_name(experiment_name)
     validate_benchmarks(benchmarks)
