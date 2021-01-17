@@ -14,7 +14,7 @@
 #
 ################################################################################
 
-FROM gcr.io/oss-fuzz-base/base-builder
+FROM gcr.io/oss-fuzz-base/base-builder@sha256:6cd402d36992b46a9358a6cdbe2d5fa39953d422e739b9dcd3ac227d8ffb6d21
 RUN apt-get update && apt-get install -y make autoconf automake libtool pkg-config
 COPY state_variable.patch $SRC/
 RUN git clone --depth 1 https://github.com/nghttp2/nghttp2.git

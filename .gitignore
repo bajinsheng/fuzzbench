@@ -38,3 +38,5 @@ docker/generated.mk
 \#*\#
 
 .vscode
+
+config/
