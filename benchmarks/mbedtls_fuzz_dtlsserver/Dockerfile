@@ -24,4 +24,5 @@ RUN git clone --depth 1 https://github.com/openssl/openssl.git openssl
 WORKDIR mbedtls
 COPY build.sh $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
+ADD seeds /opt/seeds
 ENV  ALLOWLIST /out/allowlist.txt
