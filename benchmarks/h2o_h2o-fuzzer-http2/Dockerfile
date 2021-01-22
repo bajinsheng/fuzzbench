@@ -22,5 +22,4 @@ WORKDIR h2o
 COPY build.sh $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
 COPY *.options $SRC/
-ADD seeds /opt/seeds
 ENV  ALLOWLIST /out/allowlist.txt

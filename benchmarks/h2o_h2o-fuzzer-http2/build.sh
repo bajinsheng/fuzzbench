@@ -26,9 +26,8 @@ cmake  -DCMAKE_C_FLAGS="${CFLAGS}" -DCMAKE_CXX_FLAGS="${CXXFLAGS}" -DBUILD_FUZZE
 make h2o-fuzzer-http2
 cp ./h2o-fuzzer-* $OUT/
 
-#zip -jr $OUT/h2o-fuzzer-http2_seed_corpus.zip $SRC/h2o/fuzz/http2-corpus
-#mkdir $OUT/seeds
-#cp $SRC/h2o/fuzz/http2-corpus/* $OUT/seeds/
-cp -r /opt/seeds $OUT/
+zip -jr $OUT/h2o-fuzzer-http2_seed_corpus.zip $SRC/h2o/fuzz/http2-corpus
+mkdir $OUT/seeds
+cp $SRC/h2o/fuzz/http2-corpus/* $OUT/seeds/
 cp $SRC/*.options $SRC/h2o/fuzz/*.dict $OUT/
 popd

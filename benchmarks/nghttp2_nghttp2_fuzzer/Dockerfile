@@ -21,5 +21,4 @@ RUN git clone --depth 1 https://github.com/nghttp2/nghttp2.git
 WORKDIR nghttp2
 COPY build.sh *.options $SRC/
 COPY OCGWhitelist $OUT/allowlist.txt
-ADD seeds /opt/seeds
 ENV  ALLOWLIST /out/allowlist.txt
