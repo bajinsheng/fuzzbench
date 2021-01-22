@@ -59,7 +59,7 @@ def run_fuzzer(input_corpus, output_corpus, target_binary, extra_flags=None):
     flags = [
         '-close_fd_mask=3',
         '-print_final_stats=1',
-
+        '-rss_limit_mb=4096',
         # Don't use LSAN's leak detection. Other fuzzers won't be using it and
         # using it will cause libFuzzer to find "crashes" no one cares about.
         '-detect_leaks=0',
