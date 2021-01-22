@@ -17,6 +17,7 @@ tar xf libpng-1.2.56.tar.gz
 
 cd libpng-1.2.56
 ./configure
+sed -i "s/mode=link \$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/mode=link \$(CCLD) \$(AM_CFLAGS)/g" Makefile
 make -j $(nproc)
 
 $CXX $CXXFLAGS -std=c++11 $SRC/target.cc .libs/libpng12.a $FUZZER_LIB -I . -lz \
