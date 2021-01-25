@@ -1,5 +1,5 @@
-commit: 5ee300b0b055e1205924d8ebd26066ca955300bd
-commit_date: 2020-10-08 01:57:35+00:00
+commit: b33e9a9fbcad4c97348dff1874c71e41d7c1357a
+commit_date: 2018-12-20 16:24:16+09:00
 fuzz_target: h2o-fuzzer-http2
 project: h2o
 type: bug
