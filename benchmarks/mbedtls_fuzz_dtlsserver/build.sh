@@ -15,9 +15,9 @@
 #
 ################################################################################
 
-#pushd $SRC/
-#patch -p0 -i state_variable.patch
-#popd
+pushd $SRC/
+patch -p0 -i state_variable.patch
+popd
 
 # build project
 perl scripts/config.pl set MBEDTLS_PLATFORM_TIME_ALT
