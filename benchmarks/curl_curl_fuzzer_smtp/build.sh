@@ -23,5 +23,5 @@ $SRC/libfuzzer_ocg_build.sh
 else
 ./ossfuzz.sh
 fi
-rm -rf $OUT/*_seed_corpus.zip
-cp -r /opt/seeds $OUT/
+#rm -rf $OUT/*_seed_corpus.zip
+#cp -r /opt/seeds $OUT/

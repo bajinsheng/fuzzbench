@@ -38,9 +38,9 @@ fuzzers=$(find fuzz -executable -type f '!' -name \*.py '!' -name \*-test '!' -n
 for f in $fuzzers; do
 	fuzzer=$(basename $f)
 	cp $f $OUT/
-	#zip -j $OUT/${fuzzer}_seed_corpus.zip fuzz/corpora/${fuzzer}/*
+	zip -j $OUT/${fuzzer}_seed_corpus.zip fuzz/corpora/${fuzzer}/*
 done
-cp -r /opt/seeds $OUT/
+#cp -r /opt/seeds $OUT/
 cp $SRC/*.options $OUT/
 cp fuzz/oids.txt $OUT/asn1.dict
 cp fuzz/oids.txt $OUT/x509.dict
