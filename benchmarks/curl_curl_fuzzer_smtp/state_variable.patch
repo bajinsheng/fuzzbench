@@ -1,13 +1,19 @@
-diff -c -r curl/lib/multi.c curl_patched/lib/multi.c
-*** curl/lib/multi.c    2021-01-05 15:00:28.261472536 +0800
---- curl_patched/lib/multi.c    2021-01-05 15:02:38.182487842 +0800
+diff -c -r curl/lib/smtp.c curl_patched/lib/smtp.c
+*** curl/lib/smtp.c     2021-01-30 22:48:10.671625060 +0800
+--- curl_patched/lib/smtp.c     2021-01-30 22:53:24.514411327 +0800
 ***************
-*** 123,128 ****
---- 123,129 ----
-  )
-  {
-    CURLMstate oldstate = data->mstate;
-+   printf("-------------------  %d -> %d\n", oldstate, state);
-    static const init_multistate_func finit[CURLM_STATE_LAST] = {
-      NULL,              /* INIT */
-      NULL,              /* CONNECT_PEND */
+*** 309,315 ****
+      infof(data, "SMTP %p state change from %s to %s\n",
+            (void *)smtpc, names[smtpc->state], names[newstate]);
+  #endif
+!
+    smtpc->state = newstate;
+  }
+
+--- 309,315 ----
+      infof(data, "SMTP %p state change from %s to %s\n",
+            (void *)smtpc, names[smtpc->state], names[newstate]);
+  #endif
+!   printf("-------------------  %d -> %d\n", smtpc->state, newstate);
+    smtpc->state = newstate;
+  }
