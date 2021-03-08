@@ -24,12 +24,12 @@ def build():
     # With LibFuzzer we use -fsanitize=fuzzer-no-link for build CFLAGS and then
     # /usr/lib/libFuzzer.a as the FUZZER_LIB for the main fuzzing binary. This
     # allows us to link against a version of LibFuzzer that we specify.
-    cflags = [ '-fsanitize=fuzzer-no-link', '-Xclang -load -Xclang /opt/FuzzerOCGSanitizer.so']
+    cflags = [ '-fsanitize=fuzzer-no-link']
     utils.append_flags('CFLAGS', cflags)
     utils.append_flags('CXXFLAGS', cflags)
 
-    os.environ['CC'] = 'clang'
-    os.environ['CXX'] = 'clang++'
+    os.environ['CC'] = '/clangwrapper'
+    os.environ['CXX'] = '/clang++wrapper'
     os.environ['FUZZER_LIB'] = '/usr/lib/libFuzzer.a'
 
     utils.build_benchmark()

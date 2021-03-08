@@ -21,12 +21,11 @@ FROM gcr.io/oss-fuzz-base/base-builder@sha256:6cd402d36992b46a9358a6cdbe2d5fa399
 
 RUN sed -i '/^#\sdeb-src /s/^#//' "/etc/apt/sources.list" && \
    apt-get update && \
-   apt-get install -y build-essential pkg-config bison flex gettext \
-    libffi-dev liblzma-dev libvorbis-dev libtheora-dev libogg-dev zlib1g-dev \
-    python3-pip && \
-   pip3 install meson==0.55.1 ninja==1.10.0.post2
+   apt-get install -y make autoconf automake libtool build-essential \
+    autopoint pkg-config bison flex gettext libffi-dev liblzma-dev \
+    libvorbis-dev libtheora-dev libogg-dev zlib1g-dev
 
-ADD https://ftp.gnome.org/pub/gnome/sources/glib/2.64/glib-2.64.2.tar.xz $SRC
+ADD https://ftp.gnome.org/pub/gnome/sources/glib/2.54/glib-2.54.2.tar.xz $SRC
 
 COPY state_variable.patch $SRC/
 # Checkout all development repositories
@@ -34,15 +33,15 @@ COPY state_variable.patch $SRC/
 RUN \
   git clone https://gitlab.freedesktop.org/gstreamer/gstreamer.git gstreamer && \
   cd gstreamer && \
-  git checkout -f f6ce1686f108e2a722c466ee9748913ccec0af70 && \
+  git checkout -f 4c795924dba5595fb1472864f7d27262bce247a8 && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git gst-plugins-base && \
   cd $SRC/gst-plugins-base && \
-  git checkout -f 69b5cb8a108796918e7063243028eaaaac41be03 && \
+  git checkout -f 39ba6427f18f727cc5e5bf477a24a772e4aaedee && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-ci.git gst-ci && \
   cd $SRC/gst-ci && \
-  git checkout -f aead7b4eb70fd7823fad26f1efd24f131091229e
+  git checkout -f 8f4bcce46ea7fdfcb3e2a9750f34252e34c39860
 #ADD https://people.freedesktop.org/~bilboed/gst-discoverer_seed_corpus.zip $SRC
 ADD gst-discoverer_seed_corpus.zip $SRC
 WORKDIR gstreamer
