@@ -33,15 +33,15 @@ COPY state_variable.patch $SRC/
 RUN \
   git clone https://gitlab.freedesktop.org/gstreamer/gstreamer.git gstreamer && \
   cd gstreamer && \
-  git checkout -f 4c795924dba5595fb1472864f7d27262bce247a8 && \
+  git checkout -f 4fb02fc85b70be631f5331b2547e5dc61ef7a43a && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git gst-plugins-base && \
   cd $SRC/gst-plugins-base && \
-  git checkout -f 39ba6427f18f727cc5e5bf477a24a772e4aaedee && \
+  git checkout -f 4187242a7cbd21170c43a0ebdbd66678f14131ca && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-ci.git gst-ci && \
   cd $SRC/gst-ci && \
-  git checkout -f 8f4bcce46ea7fdfcb3e2a9750f34252e34c39860
+  git checkout -f f4b08721f7756d8fa361ea4e691aea08b49458b1
 #ADD https://people.freedesktop.org/~bilboed/gst-discoverer_seed_corpus.zip $SRC
 ADD gst-discoverer_seed_corpus.zip $SRC
 WORKDIR gstreamer
