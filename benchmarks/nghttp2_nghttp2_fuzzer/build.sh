@@ -14,9 +14,9 @@
 # limitations under the License.
 #
 ################################################################################
-pushd $SRC/
-patch -p0 -i state_variable.patch
-popd
+#pushd $SRC/
+#patch -p0 -i state_variable.patch
+#popd
 
 autoreconf -i
 
