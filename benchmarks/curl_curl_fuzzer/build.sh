@@ -1,5 +1,5 @@
 #!/bin/bash -eu
-# Copyright 2017 Google Inc.
+# Copyright 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,34 @@
 # limitations under the License.
 #
 ################################################################################
-#pushd $SRC/
-#patch -p0 -i state_variable.patch
-#popd
 
-if [ "$FUZZER" = "ifcg" ] || [ "$FUZZER" = "origin" ]; then
-$SRC/libfuzzer_ocg_build.sh
-else
-./ossfuzz.sh
-fi
+echo "CC: $CC"
+echo "CXX: $CXX"
+echo "LIB_FUZZING_ENGINE: $LIB_FUZZING_ENGINE"
+echo "CFLAGS: $CFLAGS"
+echo "CXXFLAGS: $CXXFLAGS"
+
+export MAKEFLAGS+="-j$(nproc)"
+
+# Make an install directory
+export INSTALLDIR=/src/curl_install
+
+# Compile curl
+./install_curl.sh /src/curl ${INSTALLDIR} || true
+
+# Manually copy the necessary file of libcurl to the INSTALLDIR
+mkdir -p ${INSTALLDIR}/include/
+mkdir -p ${INSTALLDIR}/lib/
+cp -r /src/curl/include/curl  ${INSTALLDIR}/include/
+cp /src/curl/lib/.libs/libcurl.* ${INSTALLDIR}/lib/
+
+# Build the fuzzer.
+./compile_fuzzer.sh ${INSTALLDIR}
+make zip
+
+cp -v curl_fuzzer curl_fuzzer_seed_corpus.zip $OUT/
 rm -rf $OUT/*_seed_corpus.zip
 cp -r /opt/seeds $OUT/
+
+# Copy dictionary and options file to $OUT.
+cp -v *.dict *.options $OUT/
