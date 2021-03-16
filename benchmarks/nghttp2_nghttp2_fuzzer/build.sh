@@ -22,7 +22,6 @@ autoreconf -i
 
 sed -i "s/-O2/-O0/g" configure
 ./configure --enable-lib-only
-sed -i "s/\$(CCLD) \$(AM_CFLAGS) \$(CFLAGS)/\$(CCLD) \$(AM_CFLAGS)/g" lib/Makefile
 
 
 make all
@@ -32,8 +31,8 @@ $CXX $CXXFLAGS -std=c++11 -Ilib/includes \
     $LIB_FUZZING_ENGINE lib/.libs/libnghttp2.a
 
 cp $SRC/*.options $OUT
-#cp -r /opt/seeds $OUT/
 zip -j $OUT/nghttp2_fuzzer_seed_corpus.zip fuzz/corpus/*/*
 
-
-
+# Use the local seed
+rm -rf $OUT/*_seed_corpus.zip
+cp -r /opt/seeds $OUT/
