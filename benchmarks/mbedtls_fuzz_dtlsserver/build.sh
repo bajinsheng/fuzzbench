@@ -47,5 +47,8 @@ zip -r fuzz/fuzz_server_seed_corpus.zip fuzz/corpuses/server
 cd fuzz
 # export other associated stuff
 cp *.options $OUT/
-#cp -r /opt/seeds $OUT/
 cp fuzz_*_seed_corpus.zip $OUT/
+
+# Use the local seed
+rm -rf $OUT/*_seed_corpus.zip
+cp -r /opt/seeds $OUT/
