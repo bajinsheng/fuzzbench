@@ -23,9 +23,9 @@ cmake -DBUILD_FUZZER=ON -DOSS_FUZZ=ON -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_USE_STA
 make h2o-fuzzer-http2
 cp ./h2o-fuzzer-* $OUT/
 
-zip -jr $OUT/h2o-fuzzer-http2_seed_corpus.zip $SRC/h2o/fuzz/http2-corpus
-#mkdir $OUT/seeds
+#zip -jr $OUT/h2o-fuzzer-http2_seed_corpus.zip $SRC/h2o/fuzz/http2-corpus
+mkdir $OUT/seeds
 #cp $SRC/h2o/fuzz/http2-corpus/* $OUT/seeds/
-#cp -r /opt/seeds $OUT/
+cp -r /opt/seeds $OUT/
 cp $SRC/*.options $SRC/h2o/fuzz/*.dict $OUT/
 popd
