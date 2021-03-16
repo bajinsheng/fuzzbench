@@ -34,19 +34,19 @@ COPY state_variable.patch $SRC/
 RUN \
   git clone https://gitlab.freedesktop.org/gstreamer/gstreamer.git gstreamer && \
   cd gstreamer && \
-  git checkout -f f6ce1686f108e2a722c466ee9748913ccec0af70 && \
+  git checkout -f 44bdad58f623e50a07476c0f40f8ff7543396f7c && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git gst-plugins-base && \
   cd $SRC/gst-plugins-base && \
-  git checkout -f 69b5cb8a108796918e7063243028eaaaac41be03 && \
+  git checkout -f f4a1428a6997658625d529b9db60fde812fbf1ee && \
   cd $SRC && \
   git clone https://gitlab.freedesktop.org/gstreamer/gst-ci.git gst-ci && \
   cd $SRC/gst-ci && \
-  git checkout -f aead7b4eb70fd7823fad26f1efd24f131091229e
+  git checkout -f 8f8cd9ec4b940a01bfbc38be260f9cccfed9b7a4
 ADD https://people.freedesktop.org/~bilboed/gst-discoverer_seed_corpus.zip $SRC
-#ADD gst-discoverer_seed_corpus.zip $SRC
+
 WORKDIR gstreamer
 COPY build.sh $SRC/
-COPY libfuzzer_ocg_build.sh $SRC/
+ADD seeds /opt/seeds
 COPY OCGWhitelist $OUT/allowlist.txt
 ENV  ALLOWLIST /out/allowlist.txt

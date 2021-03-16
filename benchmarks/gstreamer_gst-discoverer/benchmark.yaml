@@ -1,5 +1,5 @@
-commit: aead7b4eb70fd7823fad26f1efd24f131091229e
-commit_date: 2020-10-22 13:10:32+00:00
+commit: 44bdad58f623e50a07476c0f40f8ff7543396f7c
+commit_date: 2021-03-11 14:41:16+00:00
 fuzz_target: gst-discoverer
 project: gstreamer
 type: bug
