@@ -16,6 +16,9 @@ ARG parent_image
 FROM $parent_image
 
 COPY fuzzinfer /fuzzinfer
+COPY clangwrapper.c /
+COPY clang++wrapper.c /
+
 RUN cd /fuzzinfer && \
     (for f in *.cpp; do \
       clang++ -stdlib=libc++ -fPIC -O2 -std=c++11 $f -c & \
@@ -23,4 +26,5 @@ RUN cd /fuzzinfer && \
     ar r /usr/lib/libFuzzer.a *.o && \
     clang++ `llvm-config --cxxflags` -Wl,-znodelete -fno-rtti -fPIC -shared sanitizer/FuzzerOCGSanitizer.cpp -o /opt/FuzzerOCGSanitizer.so `llvm-config --ldflags`
 
-
+RUN clang /clangwrapper.c -o /clangwrapper
+RUN clang /clang++wrapper.c -o /clang++wrapper
