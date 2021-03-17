@@ -1,0 +1,4 @@
+commit: 79b1a9996c094ff593ae50bc4edc1f349f39dd6d
+commit_date: 2021-01-27 14:34:56+00:00
+fuzz_target: fuzz_ntpd_receive
+project: ntp
