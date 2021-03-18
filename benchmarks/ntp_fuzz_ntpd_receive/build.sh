@@ -21,5 +21,13 @@ git apply ../patch.diff
 cp /usr/bin/ld.gold /usr/bin/ld
 ./bootstrap
 ./configure --enable-fuzztargets
+cd ntpd
+make libntpd.a
+cd ../libntp
+make libntp.a
+cd ../sntp/libopts/
 make
-cp tests/fuzz/fuzz_ntpd_receive $OUT/
+cd ../../tests/fuzz
+make
+
+cp fuzz_ntpd_receive $OUT/

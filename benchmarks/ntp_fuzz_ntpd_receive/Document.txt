@@ -1,0 +1,8 @@
+ntp-dev/include/ntp.h
+
+#define	EVNT_UNSPEC	0	/* unspecified */
+#define	EVNT_NSET	1	/* freq not set */
+#define	EVNT_FSET	2	/* freq set */
+#define	EVNT_SPIK	3	/* spike detect */
+#define	EVNT_FREQ	4	/* freq mode */
+#define	EVNT_SYNC	5	/* clock sync */

@@ -24,3 +24,7 @@ RUN bk clone http://bk.ntp.org/ntp-dev
 WORKDIR $SRC
 COPY build.sh $SRC/
 COPY patch.diff $SRC/
+
+COPY OCGWhitelist $OUT/allowlist.txt
+ADD seeds /opt/seeds
+ENV  ALLOWLIST /out/allowlist.txt
